@@ -22,7 +22,8 @@ class RegisterAPIView(APIView):
             response_data = {"refresh": str(
                 refresh), "access": str(refresh.access_token)}
             return Response(response_data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        error = serializer.errors.values()
+        return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutAPIView(APIView):
