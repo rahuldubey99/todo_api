@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Plans
 
 # Create your views here.
@@ -38,7 +39,8 @@ class LogoutAPIView(APIView):
 
 
 class PlansList (ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = PlansSerializer
 
     def get_queryset(self):
@@ -47,18 +49,28 @@ class PlansList (ListAPIView):
 
 
 class PlansCreate(CreateAPIView):
-    permission_classes = (IsAuthenticated,)
-    queryset = Plans.objects.all()
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     serializer_class = PlansSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class PlansUpdate(UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Plans.objects.all()
     serializer_class = PlansSerializer
 
+    def get_queryset(self):
+        queryset = Plans.objects.filter(user=self.request.user)
+        return queryset
+
 
 class PlansDestroy (DestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Plans.objects.all()
     serializer_class = PlansSerializer
