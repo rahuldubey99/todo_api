@@ -72,5 +72,16 @@ class PlansUpdate(UpdateAPIView):
 class PlansDestroy (DestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    queryset = Plans.objects.all()
     serializer_class = PlansSerializer
+
+    def get_queryset(self):
+        queryset = Plans.objects.filter(user=self.request.user)
+        return queryset
+
+
+# class PlansDestroyall(DestroyAPIView):
+#     authentication_classes = [JWTAuthentication]
+#     queryset = Plans.objects.all()
+#     print()
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = PlansSerializer

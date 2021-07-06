@@ -17,4 +17,6 @@ urlpatterns = [
     path('create/', views.PlansCreate.as_view()),
     path('update/<int:pk>/', views.PlansUpdate.as_view()),
     path('delete/<int:pk>/', views.PlansDestroy.as_view()),
+
+
 ]
